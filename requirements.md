@@ -23,10 +23,8 @@ por qué no es un RF.
 
 | Fragmento | Texto | Categoría | Justificación |
 |-----------|-------|-----------|----------------|
-|El asegurado no tiene manera de consultar en qué estado está su siniestro. Llama al 0800, la operadora 
-abre la planilla, busca la fila y le lee lo que dice la celda de estado.  |El sistema debe permitir consultar los datos de un siniestro|RNF | |
-|Con el informe, el liquidador determina si el siniestro está cubierto y calcula el monto. Si supera cierto 
-importe, tiene que autorizarlo el Gerente de Siniestros. |el sistema necesita autorizacion del gerente de siniestro si el siniestro supera cierto importe | | |
+|El asegurado no tiene manera de consultar en qué estado está su siniestro. Llama al 0800, la operadora abre la planilla, busca la fila y le lee lo que dice la celda de estado.  |El sistema debe permitir consultar los datos de un siniestro|RNF | |
+|Con el informe, el liquidador determina si el siniestro está cubierto y calcula el monto. Si supera cierto importe, tiene que autorizarlo el Gerente de Siniestros. |el sistema necesita autorizacion del gerente de siniestro si el siniestro supera cierto importe | | |
 
 ## Conflictos u observaciones detectadas
 
