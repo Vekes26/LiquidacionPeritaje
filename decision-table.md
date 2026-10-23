@@ -1,36 +1,82 @@
-# Tabla de decisión
+# Tabla de decisión — UC-01: Liquidación y Peritaje
 
-## [nombre de la decisión a tabular]
+## 1. Objetivo
 
-Completar condiciones (una fila por condición, con sus valores
-posibles) y acciones (una fila por acción), una columna por regla.
-Usar guion (`-`) donde la condición no importa para esa regla.
+La tabla de decisión permite representar las condiciones y acciones del proceso de liquidación y peritaje de siniestros. Contempla la necesidad de autorización gerencial, la decisión del gerente y la aceptación o rechazo de la oferta por parte del asegurado.
 
-| Condición / Acción | Regla 1 | Regla 2 | Regla 3 | Regla 4| Regla 5|Regla por defecto |
-|----------------------|---------|---------|---------|-----|---------------------|
-|el monto es superior a $8.000.000 |no |si |no |no | - |
-| es robo total |no |- |si |no | - |
-| es incendio total |no |- |- |si | - |
-| el gerente autoriza |- |si |si |si | no |
-| el asegurado acepta la oferta |si |si |si |si | - |
-| liquidar sin autorizacion gerencial |x | | | | |
-| solicitar autorizacion al gerente| | x| x|x |x |
-| realizar el pago por transferencia |x |x |x | x| |
-| cerrar el siniestro como pagado |x |x | x| x| |
+**Convenciones:**
+- **Sí:** la condición se cumple.
+- **No:** la condición no se cumple.
+- **—:** la condición no influye en esa regla o no corresponde evaluarla.
 
+## 2. Tabla de decisión
 
-**Regla por defecto:** describir qué pasa cuando ninguna regla nombrada
-aplica — no puede quedar implícita.
+| Condiciones / Reglas | R1 | R2 | R3 | R4 | R5 |
+|---|:---:|:---:|:---:|:---:|:---:|
+| ¿Requiere autorización gerencial? | No | No | Sí | Sí | Sí |
+| ¿El gerente autoriza? | — | — | Sí | Sí | No |
+| ¿El asegurado acepta la oferta? | Sí | No | Sí | No | — |
+| **Acciones / resultados** | | | | | |
+| Liquidar sin autorización gerencial | x | x |  |  |  |
+| Solicitar autorización al gerente | No | No | Sí | Sí | Sí |
+| Comunicar la oferta al asegurado | Sí | Sí | Sí | Sí | No |
+| Realizar el pago por transferencia | Sí | No | Sí | No | No |
+| Cerrar el siniestro como pagado | Sí | No | Sí | No | No |
 
-**Cómo se lee esta tabla:** (una o dos líneas explicando el orden de
-evaluación de las reglas, si corresponde).
+### Descripción de las reglas
 
-## Observaciones (obligatorio si el material relevado tiene conflictos o huecos)
+- **R1:** no se requiere autorización gerencial y el asegurado acepta la oferta. Se realiza el pago por transferencia y se cierra el siniestro como pagado.
+- **R2:** no se requiere autorización gerencial y el asegurado rechaza la oferta. No se realiza el pago.
+- **R3:** se requiere autorización gerencial, el gerente aprueba y el asegurado acepta la oferta. Se realiza el pago y se cierra el siniestro como pagado.
+- **R4:** se requiere autorización gerencial, el gerente aprueba y el asegurado rechaza la oferta. No se realiza el pago.
+- **R5:** se requiere autorización gerencial y el gerente rechaza la solicitud. No se comunica la oferta ni se realiza el pago.
 
-- **Conflictos detectados:** (ver "Detección de conflictos" en
-  skill/SKILL.md — valores distintos para la misma condición, sin
-  aclarar cuál prevalece)
-- **Huecos del material:** (una condición necesaria para la tabla que
-  ningún fragmento aclaró)
-- **Decisiones de negocio pendientes:** (qué haría falta confirmar con
-  el cliente/usuario antes de dar esta tabla por definitiva)
+## 3. Regla para determinar si se requiere autorización
+
+Se requiere autorización del gerente cuando se cumple al menos una de estas condiciones:
+
+- El monto estimado de liquidación supera los $8.000.000.
+- El siniestro corresponde a un robo total.
+- El siniestro corresponde a un incendio total.
+
+Si no se cumple ninguna de estas condiciones, el siniestro puede continuar sin autorización gerencial.
+
+El importe de exactamente $8.000.000 no activa el criterio por monto, porque la regla relevada indica que el monto debe ser superior a ese valor.
+
+## 4. Regla por defecto
+
+Si ninguna de las reglas R1 a R5 aplica, el sistema no debe autorizar ni realizar el pago automáticamente. El siniestro debe quedar pendiente de revisión hasta que se aclaren las condiciones necesarias para continuar.
+
+Esta regla por defecto es una propuesta pendiente de validación con el cliente, ya que el material relevado no establece expresamente el procedimiento para todos los casos no contemplados.
+
+## 5. Cómo se lee la tabla
+
+Se identifica primero si el siniestro requiere autorización gerencial. Luego, si corresponde, se evalúa la decisión del gerente. Finalmente, cuando se puede comunicar la oferta, se registra si el asegurado la acepta o la rechaza y se ejecutan las acciones correspondientes.
+
+Cada regla representa una combinación diferente de condiciones. Si ninguna coincide, se aplica la regla por defecto.
+
+## 6. Observaciones
+
+### 6.1. Conflictos detectados
+
+- La autorización gerencial depende del monto y del tipo de siniestro. La autorización es necesaria si el monto supera los $8.000.000, o si se trata de robo total o incendio total, independientemente del monto.
+- La tabla inicial no contemplaba explícitamente el rechazo de la oferta por parte del asegurado en todas las reglas.
+- Los registros de siniestros relevados utilizan diferentes estados, por ejemplo: «cerrado», «pagado», «en trámite», «pericia», «con perito» y «abierto». Es necesario definir criterios uniformes para registrar el estado de cada siniestro.
+
+### 6.2. Huecos del material
+
+- No se especifica qué estado debe asignarse al siniestro cuando el gerente rechaza la autorización.
+- No se especifica qué estado debe asignarse cuando el asegurado rechaza la oferta.
+- No se define el procedimiento que debe seguirse cuando faltan datos para determinar si corresponde solicitar autorización.
+- No se aclara qué registro formal debe quedar de la aprobación o rechazo del gerente.
+
+### 6.3. Decisiones de negocio pendientes
+
+Antes de considerar definitiva la tabla, se debe confirmar con el cliente:
+
+1. ¿Qué estado debe tener el siniestro cuando el gerente rechaza la autorización?
+2. ¿Qué estado debe tener cuando el asegurado rechaza la oferta?
+3. ¿Cómo debe actuar el sistema cuando faltan datos necesarios para tomar una decisión?
+4. ¿La aprobación del gerente debe registrarse formalmente antes de comunicar la oferta al asegurado?
+5. ¿Qué estados oficiales se utilizarán para unificar los registros de siniestros?
+
