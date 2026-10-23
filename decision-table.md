@@ -6,11 +6,18 @@ Completar condiciones (una fila por condición, con sus valores
 posibles) y acciones (una fila por acción), una columna por regla.
 Usar guion (`-`) donde la condición no importa para esa regla.
 
-| Condición / Acción | Regla 1 | Regla 2 | Regla 3 | ... | Regla por defecto |
+| Condición / Acción | Regla 1 | Regla 2 | Regla 3 | Regla 4| Regla 5|Regla por defecto |
 |----------------------|---------|---------|---------|-----|---------------------|
-| Condición A | | | | | - |
-| Condición B | | | | | - |
-| **Acción** | | | | | |
+|el monto es superior a $8.000.000 |no |si |no |no | - |
+| es robo total |no |- |si |no | - |
+| es incendio total |no |- |- |si | - |
+| el gerente autoriza |- |si |si |si | no |
+| el asegurado acepta la oferta |si |si |si |si | - |
+| liquidar sin autorizacion gerencial |x | | | | |
+| solicitar autorizacion al gerente| | x| x|x |x |
+| realizar el pago por transferencia |x |x |x | x| |
+| cerrar el siniestro como pagado |x |x | x| x| |
+
 
 **Regla por defecto:** describir qué pasa cuando ninguna regla nombrada
 aplica — no puede quedar implícita.
