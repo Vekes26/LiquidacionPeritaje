@@ -11,7 +11,7 @@ mezclada).
 | RF-01 |El sistema debe permitir registrar la asignación de un perito o siniestro.|caso aseguradora pampa 3.3, asignacion del perito|
 | RF-02 |El sistema debe permitir registrar el informe de pericia y las fotografías de los datos correspondientes a un siniestro |caso aseguradora pampa 3.3 y tabla de documentos, informe de pericia |
 | RF-03 |El sistema debe permitir registrar la determinación de cobertura y el monto calculado para la liquidación de un siniestro. |caso aseguradora pampa 3.3, gestion de liquidacion|
-| RF-04 |El sistema debe solicitar automatización al gerente de siniestros cuando el monto estimado supera los $8.000.000, o cuando se trata de robo total o incendio total |acta, reglas de automatizacion de siniestros|
+| RF-04 |El sistema debe solicitar autorización cuando el monto estimado de liquidación supere los $3.000.000 o cuando el siniestro sea de robo total o incendio total, independientemente del monto. Si el siniestro está asignado al Gerente de Siniestros, debe autorizar el Director; en los demás casos, autoriza el Gerente de Siniestros. La autorización debe realizarse antes de comunicar la oferta al asegurado.|acta, reglas de automatizacion de siniestros|
 | RF-05 |El sistema debe permitir registrar si el asegurado acepta o rechaza el monto de liquidación ofrecido. |caso aseguradora pampa 3.3, comunicacion de la liquidacion al asegurado|
 
 ## Fragmentos que NO son requerimientos funcionales
