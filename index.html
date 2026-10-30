@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aseguradora Pampa - Peritaje y Liquidación de Siniestros</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 1rem auto;
+    padding: 0 1rem 2rem;
+    background: #f9f9f9;
+    color: #222;
+  }
+  h1, h2 {
+    text-align: center;
+    color: #114b8c;
+  }
+  nav {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  nav button {
+    background: #114b8c;
+    color: white;
+    border: none;
+    margin: 0 0.3rem;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  nav button.active {
+    background: #0a2e52;
+  }
+  section {
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 0 8px rgb(0 0 0 / 0.1);
+    padding: 1rem 2rem 2rem;
+    display: none;
+  }
+  section.active {
+    display: block;
+  }
+  label {
+    display: block;
+    margin: 0.6rem 0 0.2rem;
+  }
+  select, input[type="text"], input[type="number"], textarea {
+    width: 100%;
+    padding: 0.4rem;
+    border-radius: 4px;
+    border: 1px solid #aaa;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  textarea {
+    resize: vertical;
+  }
+  input[type="file"] {
+    margin-top: 0.4rem;
+  }
+  button.submit-btn, button.action-btn {
+    margin-top: 1rem;
+    background: #114b8c;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button.submit-btn:disabled {
+    background: #888;
+    cursor: not-allowed;
+  }
+  .photos-preview img {
+    max-width: 120px;
+    max-height: 80px;
+    margin: 0.3rem 0.5rem 0.5rem 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    object-fit: cover;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.6rem;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 0.4rem 0.8rem;
+    text-align: center;
+  }
+  th {
+    background: #114b8c;
+    color: white;
+  }
+  .status-accepted {
+    color: green;
+    font-weight: bold;
+  }
+  .status-rejected {
+    color: red;
+    font-weight: bold;
+  }
+  .note {
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 0.3rem;
+  }
+  .alert {
+    background: #ffe0e0;
+    border: 1px solid #dd5050;
+    color: #a00000;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<h1>Aseguradora Pampa S.A.</h1>
+<h2>Peritaje y Liquidación de Siniestros</h2>
+
+<nav>
+  <button type="button" id="tab-asignar" class="active">Asignar Perito</button>
+  <button type="button" id="tab-informe">Registrar Informe y Fotos</button>
+  <button type="button" id="tab-cobertura">Verificar Cobertura y Monto</button>
+  <button type="button" id="tab-autorizacion">Solicitar Autorización</button>
+  <button type="button" id="tab-oferta">Aceptar/Rechazar Oferta</button>
+</nav>
+
+<!-- RF-01: Asignar un perito a un siniestro -->
+<section id="sect-asignar" class="active" aria-label="Asignar perito a siniestro">
+  <h2>RF-01: Asignar Perito a un Siniestro</h2>
+
+  <label for="sel-siniestros-asignar">Seleccione un siniestro:</label>
+  <select id="sel-siniestros-asignar" aria-describedby="info-siniestros-asignar">
+  </select>
+  <div id="info-siniestros-asignar" class="note">Aquí puede seleccionar un siniestro disponible.</div>
+
+  <label for="sel-peritos">Seleccione un perito:</label>
+  <select id="sel-peritos">
+  </select>
+
+  <button class="submit-btn" id="btn-asignar-perito">Asignar perito</button>
+
+  <p id="mensaje-asignar" role="alert" style="margin-top:1rem;"></p>
+</section>
+
+<!-- RF-02: Registrar informe de pericia y adjuntar fotografías -->
+<section id="sect-informe" aria-label="Registrar informe y fotografías de pericia">
+  <h2>RF-02: Registrar Informe de Pericia y Adjuntar Fotografías</h2>
+
+  <label for="sel-siniestros-informe">Seleccione un siniestro asignado:</label>
+  <select id="sel-siniestros-informe" aria-describedby="info-siniestros-informe">
+  </select>
+  <div id="info-siniestros-informe" class="note">Solo los siniestros con perito asignado aparecen aquí.</div>
+
+  <label for="txt-informe">Informe de pericia:</label>
+  <textarea id="txt-informe" rows="5" placeholder="Describa el informe de pericia..."></textarea>
+
+  <label for="input-fotos">Adjuntar fotografías:</label>
+  <input type="file" id="input-fotos" accept="image/*" multiple />
+
+  <div class="photos-preview" id="photos-preview"></div>
+
+  <button class="submit-btn" id="btn-registrar-informe">Guardar informe</button>
+  <p id="mensaje-informe" role="alert" style="margin-top:1rem;"></p>
+</section>
+
+<!-- RF-03: Verificar cobertura y determinar monto de liquidación -->
+<section id="sect-cobertura" aria-label="Verificar cobertura y determinar monto de liquidación">
+  <h2>RF-03: Verificar Cobertura y Determinar Monto de Liquidación</h2>
+
+  <label for="sel-siniestros-cobertura">Seleccione un siniestro con informe registrado:</label>
+  <select id="sel-siniestros-cobertura" aria-describedby="info-siniestros-cobertura">
+  </select>
+  <div id="info-siniestros-cobertura" class="note">Solo siniestros con informe pueden solicitar cobertura y monto.</div>
+
+  <p><strong>Tipo de siniestro:</strong> <span id="mostrar-tipo-siniestro">-</span></p>
+
+  <label for="input-monto-liquidacion">Monto de liquidación (ARS):</label>
+  <input type="number" id="input-monto-liquidacion" min="0" step="1000" placeholder="Ingrese o calcule el monto" />
+
+  <button class="submit-btn" id="btn-confirmar-monto">Guardar monto</button>
+
+  <p id="mensaje-monto" role="alert" style="margin-top:1rem;"></p>
+</section>
+
+<!-- RF-04: Solicitar autorización según reglas -->
+<section id="sect-autorizacion" aria-label="Solicitar autorización para monto">
+  <h2>RF-04: Solicitar Autorización</h2>
+
+  <label for="sel-siniestros-autorizacion">Seleccione siniestro con monto determinado:</label>
+  <select id="sel-siniestros-autorizacion" aria-describedby="info-siniestros-autorizacion">
+  </select>
+  <div id="info-siniestros-autorizacion" class="note">Solo siniestros con monto pueden solicitar autorización.</div>
+
+  <p><strong>Monto de liquidación:</strong> ARS <span id="mon-liquidacion-autorizacion">-</span></p>
+  <p><strong>Tipo de siniestro:</strong> <span id="tipo-siniestro-autorizacion">-</span></p>
+  <p><strong>Perito asignado:</strong> <span id="perito-autorizacion">-</span></p>
+
+  <div id="info-autorizacion-reglas" class="note" style="margin-bottom: 0.7rem; font-weight: bold;"></div>
+
+  <button class="submit-btn" id="btn-solicitar-autorizacion" disabled>Solicitar autorización</button>
+  <p id="mensaje-autorizacion" role="alert" style="margin-top:1rem;"></p>
+</section>
+
+<!-- RF-05: Registrar aceptación o rechazo -->
+<section id="sect-oferta" aria-label="Registrar aceptación o rechazo de la oferta">
+  <h2>RF-05: Aceptar o Rechazar Oferta</h2>
+
+  <label for="sel-siniestros-oferta">Seleccione siniestro con oferta autorizada:</label>
+  <select id="sel-siniestros-oferta" aria-describedby="info-siniestros-oferta">
+  </select>
+  <div id="info-siniestros-oferta" class="note">Solo siniestros con autorización positiva y monto disponible.</div>
+
+  <p><strong>Monto ofrecido:</strong> ARS <span id="monto-oferta"></span></p>
+  <p><strong>Estado oferta actual:</strong> <span id="estado-oferta">--</span></p>
+
+  <button class="action-btn" id="btn-aceptar-oferta" disabled>Aceptar oferta</button>
+  <button class="action-btn" id="btn-rechazar-oferta" disabled>Rechazar oferta</button>
+
+  <p id="mensaje-oferta" role="alert" style="margin-top:1rem;"></p>
+</section>
+
+<script>
+(() => {
+  // Datos simulados iniciales
+  const peritos = [
+    { id: 1, nombre: "Juan Pérez", cargo: "Perito" },
+    { id: 2, nombre: "Laura Gómez", cargo: "Perito" },
+    { id: 3, nombre: "Carlos Díaz (Gerente Siniestros)", cargo: "Gerente" },
+    { id: 4, nombre: "María Fernández (Director)", cargo: "Director" }
+  ];
+
+  const siniestros = [
+    { id: 101, descripcion: "Accidente con daño parcial", tipo: "daño parcial", peritoId: null, informe: null, fotos: [], monto: null, autorizadoPor: null, autorizadoFecha: null, ofertaAceptada: null },
+    { id: 102, descripcion: "Robo total vehículo", tipo: "robo total", peritoId: null, informe: null, fotos: [], monto: null, autorizadoPor: null, autorizadoFecha: null, ofertaAceptada: null },
+    { id: 103, descripcion: "Incendio total vivienda", tipo: "incendio total", peritoId: null, informe: null, fotos: [], monto: null, autorizadoPor: null, autorizadoFecha: null, ofertaAceptada: null },
+    { id: 104, descripcion: "Daño parcial por granizo", tipo: "daño parcial", peritoId: null, informe: null, fotos: [], monto: null, autorizadoPor: null, autorizadoFecha: null, ofertaAceptada: null }
+  ];
+
+  // Referencias a DOM: pestañas y secciones
+  const tabs = {
+    asignar: document.getElementById("tab-asignar"),
+    informe: document.getElementById("tab-informe"),
+    cobertura: document.getElementById("tab-cobertura"),
+    autorizacion: document.getElementById("tab-autorizacion"),
+    oferta: document.getElementById("tab-oferta")
+  };
+  const sections = {
+    asignar: document.getElementById("sect-asignar"),
+    informe: document.getElementById("sect-informe"),
+    cobertura: document.getElementById("sect-cobertura"),
+    autorizacion: document.getElementById("sect-autorizacion"),
+    oferta: document.getElementById("sect-oferta")
+  };
+
+  // Cambiar pestaña
+  function cambiarPestania(nombre) {
+    Object.keys(tabs).forEach(key => {
+      tabs[key].classList.toggle("active", key === nombre);
+      sections[key].classList.toggle("active", key === nombre);
+    });
+    if(nombre === "asignar") {
+      cargarSiniestrosAsignar();
+      cargarPeritos();
+      document.getElementById("mensaje-asignar").textContent = "";
+    }
+    else if(nombre === "informe"){
+      cargarSiniestrosInforme();
+      limpiarInforme();
+    }
+    else if(nombre === "cobertura"){
+      cargarSiniestrosCobertura();
+      limpiarCobertura();
+    }
+    else if(nombre === "autorizacion"){
+      cargarSiniestrosAutorizacion();
+      limpiarAutorizacion();
+    }
+    else if(nombre === "oferta"){
+      cargarSiniestrosOferta();
+      limpiarOferta();
+    }
+  }
+
+  Object.entries(tabs).forEach(([key, btn]) => {
+    btn.addEventListener("click", () => cambiarPestania(key));
+  });
+
+  // RF-01 Asignar perito
+
+  const selSiniestrosAsignar = document.getElementById("sel-siniestros-asignar");
+  const selPeritos = document.getElementById("sel-peritos");
+  const btnAsignarPerito = document.getElementById("btn-asignar-perito");
+  const msgAsignar = document.getElementById("mensaje-asignar");
+
+  function cargarSiniestrosAsignar() {
+    selSiniestrosAsignar.innerHTML = "";
+    siniestros.forEach(sin => {
+      const opcion = document.createElement("option");
+      opcion.value = sin.id;
+      const perito = peritos.find(p => p.id === sin.peritoId);
+      opcion.textContent = `${sin.id} - ${sin.descripcion} ${
+        perito ? `(Perito: ${perito.nombre})` : "(Sin perito)"
+      }`;
+      selSiniestrosAsignar.appendChild(opcion);
+    });
+  }
+
+  function cargarPeritos() {
+    selPeritos.innerHTML = "";
+    peritos.forEach(p => {
+      // Sólo permitir asignar perito o gerente/director? Lo permitimos todo.
+      const opcion = document.createElement("option");
+      opcion.value = p.id;
+      opcion.textContent = `${p.nombre} (${p.cargo})`;
+      selPeritos.appendChild(opcion);
+    });
+  }
+
+  btnAsignarPerito.addEventListener("click", () => {
+    const siniestroId = +selSiniestrosAsignar.value;
+    const peritoId = +selPeritos.value;
+    const sin = siniestros.find(s => s.id === siniestroId);
+    const perito = peritos.find(p => p.id === peritoId);
+    if (sin && perito) {
+      sin.peritoId = peritoId;
+      msgAsignar.textContent = `Perito ${perito.nombre} asignado al siniestro ${sin.id}.`;
+      // Actualiza selects dependientes:
+      cargarSiniestrosInforme();
+      cargarSiniestrosAutorizacion();
+      cargarSiniestrosOferta();
+      cargarSiniestrosCobertura();
+      cargarSiniestrosAsignar(); // para actualizar texto con perito
+    } else {
+      msgAsignar.textContent = "Error: seleccione un siniestro y un perito válidos.";
+    }
+  });
+
+  // RF-02 Registrar informe y fotos
+  const selSiniestrosInforme = document.getElementById("sel-siniestros-informe");
+  const txtInforme = document.getElementById("txt-informe");
+  const inputFotos = document.getElementById("input-fotos");
+  const photosPreview = document.getElementById("photos-preview");
+  const btnGuardarInforme = document.getElementById("btn-registrar-informe");
+  const msgInforme = document.getElementById("mensaje-informe");
+
+  function cargarSiniestrosInforme() {
+    selSiniestrosInforme.innerHTML = "";
+    siniestros.filter(s => s.peritoId !== null).forEach(s => {
+      const opcion = document.createElement("option");
+      opcion.value = s.id;
+      opcion.textContent = `${s.id} - ${s.descripcion}`;
+      selSiniestrosInforme.appendChild(opcion);
+    });
+    if(selSiniestrosInforme.options.length === 0) {
+      const opcion = document.createElement("option");
+      opcion.textContent = "No hay siniestros con perito asignado.";
+      opcion.disabled = true;
+      opcion.selected = true;
+      selSiniestrosInforme.appendChild(opcion);
+      btnGuardarInforme.disabled = true;
+    } else {
+      btnGuardarInforme.disabled = false;
+    }
+  }
+
+  // Limpiar el formulario de informe
+  function limpiarInforme() {
+    txtInforme.value = "";
+    inputFotos.value = "";
+    photosPreview.innerHTML = "";
+    msgInforme.textContent = "";
+  }
+
+  // Mostrar informe existente si cambio siniestro
+  selSiniestrosInforme.addEventListener("change", () => {
+    const id = +selSiniestrosInforme.value;
+    const sin = siniestros.find(s => s.id === id);
+    if(sin) {
+      txtInforme.value = sin.informe || "";
+      photosPreview.innerHTML = "";
+      if(sin.fotos.length > 0) {
+        sin.fotos.forEach(url => {
+          const img = document.createElement("img");
+          img.src = url;
+          photosPreview.appendChild(img);
+        });
+      }
+    }
+    msgInforme.textContent = "";
+    inputFotos.value = "";
+  });
+
+  // Vista previa fotos seleccionadas
+  inputFotos.addEventListener("change", () => {
+    photosPreview.innerHTML = "";
+    const files = inputFotos.files;
+    if(files.length === 0) return;
+    Array.from(files).forEach(file => {
+      if(!file.type.startsWith("image/")) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        photosPreview.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  btnGuardarInforme.addEventListener("click", () => {
+    const id = +selSiniestrosInforme.value;
+    const sin = siniestros.find(s => s.id === id);
+    if(!sin) {
+      msgInforme.textContent = "Seleccione un siniestro válido.";
+      return;
+    }
+    if(txtInforme.value.trim() === "") {
+      msgInforme.textContent = "El informe no puede estar vacío.";
+      return;
+    }
+    // Guardar texto informe
+    sin.informe = txtInforme.value.trim();
+
+    // Guardar fotos en base64 (simulado)
+    sin.fotos = [];
+    const files = inputFotos.files;
+    if(files.length > 0) {
+      let fotosLeidas = 0;
+      Array.from(files).forEach(file => {
+        if(!file.type.startsWith("image/")) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+          sin.fotos.push(e.target.result);
+          fotosLeidas ++;
+          if(fotosLeidas === files.length) {
+            msgInforme.textContent = `Informe y ${files.length} foto(s) guardadas correctamente.`;
+            cargarSiniestrosCobertura();
+            cargarSiniestrosAutorizacion();
+            cargarSiniestrosOferta();
+          }
+        }
+        reader.readAsDataURL(file);
+      });
+    } else {
+      msgInforme.textContent = "Informe guardado correctamente (sin fotos adjuntas).";
+      cargarSiniestrosCobertura();
+      cargarSiniestrosAutorizacion();
+      cargarSiniestrosOferta();
+    }
+  });
+
+  // RF-03 Verificar cobertura y monto
+
+  const selSiniestrosCobertura = document.getElementById("sel-siniestros-cobertura");
+  const mostrarTipoSiniestro = document.getElementById("mostrar-tipo-siniestro");
+  const inputMontoLiquidacion = document.getElementById("input-monto-liquidacion");
+  const btnConfirmarMonto = document.getElementById("btn-confirmar-monto");
+  const msgMonto = document.getElementById("mensaje-monto");
+
+  function cargarSiniestrosCobertura() {
+    selSiniestrosCobertura.innerHTML = "";
+    siniestros.filter(s => s.informe !== null).forEach(s => {
+      const opcion = document.createElement("option");
+      opcion.value = s.id;
+      opcion.textContent = `${s.id} - ${s.descripcion}`;
+      selSiniestrosCobertura.appendChild(opcion);
+    });
+    if(selSiniestrosCobertura.options.length === 0) {
+      const opcion = document.createElement("option");
+      opcion.textContent = "No hay siniestros con informe registrado.";
+      opcion.disabled = true;
+      opcion.selected = true;
+      selSiniestrosCobertura.appendChild(opcion);
+      btnConfirmarMonto.disabled = true;
+    } else {
+      btnConfirmarMonto.disabled = false;
+    }
+  }
+
+  function limpiarCobertura() {
+    mostrarTipoSiniestro.textContent = "-";
+    inputMontoLiquidacion.value = "";
+    msgMonto.textContent = "";
+  }
+
+  // Actualizar datos al escoger siniestro
+  selSiniestrosCobertura.addEventListener("change", () => {
+    const id = +selSiniestrosCobertura.value;
+    const sin = siniestros.find(s => s.id === id);
+    if(sin) {
+      mostrarTipoSiniestro.textContent = sin.tipo;
+      inputMontoLiquidacion.value = sin.monto !== null ? sin.monto : "";
+    } else {
+      mostrarTipoSiniestro.textContent = "-";
+      inputMontoLiquidacion.value = "";
+    }
+    msgMonto.textContent = "";
+  });
+
+  btnConfirmarMonto.addEventListener("click", () => {
+    const id = +selSiniestrosCobertura.value;
+    const sin = siniestros.find(s => s.id === id);
+    if(!sin) {
+      msgMonto.textContent = "Seleccione un siniestro válido.";
+      return;
+    }
+    const monto = Number(inputMontoLiquidacion.value);
+    if(isNaN(monto) || monto <= 0) {
+      msgMonto.textContent = "Ingrese un monto válido y mayor a cero.";
+      return;
+    }
+    sin.monto = monto;
+    msgMonto.textContent = `Monto de liquidación de ARS ${monto.toLocaleString()} guardado para el siniestro ${sin.id}.`;
+    cargarSiniestrosAutorizacion();
+    cargarSiniestrosOferta();
+  });
+
+  // RF-04 Solicitar autorización
+
+  const selSiniestrosAutorizacion = document.getElementById("sel-siniestros-autorizacion");
+  const monLiquidacionAutorizacion = document.getElementById("mon-liquidacion-autorizacion");
+  const tipoSiniestroAutorizacion = document.getElementById("tipo-siniestro-autorizacion");
+  const peritoAutorizacion = document.getElementById("perito-autorizacion");
+  const btnSolicitarAutorizacion = document.getElementById("btn-solicitar-autorizacion");
+  const msgAutorizacion = document.getElementById("mensaje-autorizacion");
+  const infoReglas = document.getElementById("info-autorizacion-reglas");
+
+  function cargarSiniestrosAutorizacion() {
+    selSiniestrosAutorizacion.innerHTML = "";
+    siniestros.filter(s => s.monto !== null).forEach(s => {
+      const opcion = document.createElement("option");
+      opcion.value = s.id;
+      // Mostrar si ya tiene autorización
+      const estado = (s.autorizadoPor ? " (Autorizado)" : " (Pendiente autorización)");
+      opcion.textContent = `${s.id} - ${s.descripcion}${estado}`;
+      selSiniestrosAutorizacion.appendChild(opcion);
+    });
+    if(selSiniestrosAutorizacion.options.length === 0) {
+      const opcion = document.createElement("option");
+      opcion.textContent = "No hay siniestros con monto determinado.";
+      opcion.disabled = true;
+      opcion.selected = true;
+      selSiniestrosAutorizacion.appendChild(opcion);
+      btnSolicitarAutorizacion.disabled = true;
+      infoReglas.textContent = "";
+    } else {
+      btnSolicitarAutorizacion.disabled = false;
+    }
+  }
+
+  function limpiarAutorizacion() {
+    monLiquidacionAutorizacion.textContent = "-";
+    tipoSiniestroAutorizacion.textContent = "-";
+    peritoAutorizacion.textContent = "-";
+    btnSolicitarAutorizacion.disabled = true;
+    infoReglas.textContent = "";
+    msgAutorizacion.textContent = "";
+  }
+
+  selSiniestrosAutorizacion.addEventListener("change", () => {
+    limpiarAutorizacion();
+    const id = +selSiniestrosAutorizacion.value;
+    const sin = siniestros.find(s => s.id === id);
+    if(!sin) return;
+
+    monLiquidacionAutorizacion.textContent = sin.monto.toLocaleString();
+    tipoSiniestroAutorizacion.textContent = sin.tipo;
+    const perito = peritos.find(p => p.id === sin.peritoId);
+    peritoAutorizacion.textContent = perito ? perito.nombre + ` (${perito.cargo})` : "(Sin perito)";
+
+    // Evaluar si requiere autorización obligatoria (RFC-04)
+    const requiereAutorizacion = (sin.monto > 3000000 || sin.tipo === "robo total" || sin.tipo === "incendio total");
+    if(!requiereAutorizacion){
+      infoReglas.textContent = "No requiere autorización para comunicar oferta.";
+      btnSolicitarAutorizacion.disabled = true;
+      msgAutorizacion.textContent = "";
+      sin.autorizadoPor = "No requerida";
+      sin.autorizadoFecha = new Date().toISOString();
+    } else {
+      infoReglas.textContent = "Autorización obligatoria antes de comunicar oferta.";
+      btnSolicitarAutorizacion.disabled = false;
+      msgAutorizacion.textContent = sin.autorizadoPor ? `Ya autorizado por: ${sin.autorizadoPor}` : "Pendiente de autorización";
+    }
+  });
+
+  btnSolicitarAutorizacion.addEventListener("click", () => {
+    const id = +selSiniestrosAutorizacion.value;
+    const sin = siniestros.find(s => s.id === id);
+    if(!sin) {
+      msgAutorizacion.textContent = "Seleccione un siniestro válido.";
+      return;
+    }
+    if (!sin.peritoId) {
+      msgAutorizacion.textContent = "El siniestro no tiene perito asignado, no se puede autorizar.";
+      return;
+    }
+
+    const perito = peritos.find(p => p.id === sin.peritoId);
+    if(!perito) {
+      msgAutorizacion.textContent = "Perito asignado no válido.";
+      return;
+    }
+
+    // Quien autoriza:
+    // Si monto > 3.000.000 o tipo robo total/incendio total se solicita autorizacion.
+    // Autoriza el Gerente Siniestros excepto si tiene asignado el caso (perito: gerente),
+    // en ese caso autoriza el Director.
+
+    // Encontrar gerente y director
+    const gerente = peritos.find(p => p.cargo === "Gerente");
+    const director = peritos.find(p => p.cargo === "Director");
+    if(!gerente || !director) {
+      msgAutorizacion.textContent = "Error: no se han definido roles Gerente o Director.";
+      return;
+    }
+
+    // Determinar autorizador
+    let autorizador = gerente.nombre;
+    if(perito.id === gerente.id) {
+      autorizador = director.nombre;
+    }
+
+    // Simular autorización simple con confirm prompt
+    const confirmar = confirm(`Autorización requerida.\n\nSiniestro: ${sin.descripcion}\nMonto: ARS ${sin.monto.toLocaleString()}\nAutorizará: ${autorizador}\n\nDar autorización?`);
+    if(confirmar) {
+      sin.autorizadoPor = autorizador;
+      sin.autorizadoFecha = new Date().toISOString();
+      msgAutorizacion.textContent = `Siniestro autorizado por ${autorizador} correctamente. Puede comunicar la oferta.`;
+      btnSolicitarAutorizacion.disabled = true;
+      cargarSiniestrosOferta();
+    } else {
+      msgAutorizacion.textContent = "Autorización rechazada. No se puede comunicar oferta.";
+    }
+  });
+
+  // RF-05 Registrar aceptación o rechazo
+
+  const selSiniestrosOferta = document.getElementById("sel-siniestros-oferta");
+  const montoOferta = document.getElementById("monto-oferta");
+  const estadoOferta = document.getElementById("estado-oferta");
+  const btnAceptarOferta = document.getElementById("btn-aceptar-oferta");
+  const btnRechazarOferta = document.getElementById("btn-rechazar-oferta");
+  const msgOferta = document.getElementById("mensaje-oferta");
+
+  function cargarSiniestrosOferta() {
+    selSiniestrosOferta.innerHTML = "";
+    siniestros
+      .filter(s => s.monto !== null)
+      .filter(s => {
+        // Oferta solo si:
+        // - si requiere autorización, tiene que estar autorizada
+        // - si no requiere autorización, puede ir directo
+        const requiereAut = (s.monto > 3000000 || s.tipo === "robo total" || s.tipo === "incendio total");
+        if(requiereAut){
+          return s.autorizadoPor && s.autorizadoPor !== "No requerida";
+        }
+        return true;
+      })
+      .forEach(s => {
+        const opcion = document.createElement("option");
+        opcion.value = s.id;
+        let estadoTexto = "(Sin respuesta)";
+        if(s.ofertaAceptada === true) estadoTexto = "(Aceptada)";
+        else if(s.ofertaAceptada === false) estadoTexto = "(Rechazada)";
+        opcion.textContent = `${s.id} - ${s.descripcion} ${estadoTexto}`;
+        selSiniestrosOferta.appendChild(opcion);
+      });
+    if(selSiniestrosOferta.options.length === 0) {
+      const opcion = document.createElement("option");
+      opcion.textContent = "No hay siniestros con oferta autorizada para gestionar respuesta.";
+      opcion.disabled = true;
+      opcion.selected = true;
+      selSiniestrosOferta.appendChild(opcion);
+      btnAceptarOferta.disabled = true;
+      btnRechazarOferta.disabled = true;
+      montoOferta.textContent = "-";
+      estadoOferta.textContent = "-";
+      msgOferta.textContent = "";
+    } else {
+      btnAceptarOferta.disabled = false;
+      btnRechazarOferta.disabled = false;
+      msgOferta.textContent = "";
+    }
+  }
+
+  function limpiarOferta() {
+    montoOferta.textContent = "-";
+    estadoOferta.textContent = "--";
+    msgOferta.textContent = "";
+    btnAceptarOferta.disabled = true;
+    btnRechazarOferta.disabled = true;
+  }
+
+  selSiniestrosOferta.addEventListener("change", () => {
+    const id = +selSiniestrosOferta.value;
+    const sin = siniestros.find(s => s.id === id);
+    if(!sin) return;
+    montoOferta.textContent = sin.monto.toLocaleString();
+    if(sin.ofertaAceptada === true) {
+      estadoOferta.textContent = "Aceptada";
+      estadoOferta.className = "status-accepted";
+    } else if (sin.ofertaAceptada === false) {
+      estadoOferta.textContent = "Rechazada";
+      estadoOferta.className = "status-rejected";
+    } else {
+      estadoOferta.textContent = "Pendiente";
+      estadoOferta.className = "";
+    }
+
+    btnAceptarOferta.disabled = sin.ofertaAceptada === true;
+    btnRechazarOferta.disabled = sin.ofertaAceptada === false;
+    msgOferta.textContent = "";
+  });
+
+  btnAceptarOferta.addEventListener("click", () => {
+    const id = +selSiniestrosOferta.value;
+    const sin = siniestros.find(s => s.id === id);
+    if(sin) {
+      if(sin.ofertaAceptada === true){
+        msgOferta.textContent = "La oferta ya fue aceptada";
+        return;
+      }
+      sin.ofertaAceptada = true;
+      estadoOferta.textContent = "Aceptada";
+      estadoOferta.className = "status-accepted";
+      btnAceptarOferta.disabled = true;
+      btnRechazarOferta.disabled = false;
+      msgOferta.textContent = `La oferta para el siniestro ${sin.id} fue aceptada por el asegurado.`;
+      cargarSiniestrosOferta();
+    }
+  });
+
+  btnRechazarOferta.addEventListener("click", () => {
+    const id = +selSiniestrosOferta.value;
+    const sin = siniestros.find(s => s.id === id);
+    if(sin) {
+      if(sin.ofertaAceptada === false){
+        msgOferta.textContent = "La oferta ya fue rechazada";
+        return;
+      }
+      sin.ofertaAceptada = false;
+      estadoOferta.textContent = "Rechazada";
+      estadoOferta.className = "status-rejected";
+      btnRechazarOferta.disabled = true;
+      btnAceptarOferta.disabled = false;
+      msgOferta.textContent = `La oferta para el siniestro ${sin.id} fue rechazada por el asegurado.`;
+      cargarSiniestrosOferta();
+    }
+  });
+
+  // Inicialización en pestaña Asignar (por defecto)
+  cambiarPestania("asignar");
+})();
+</script>
+
+</body>
+</html>
