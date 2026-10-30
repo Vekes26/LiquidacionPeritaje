@@ -18,10 +18,10 @@ La tabla de decisión permite representar las condiciones y acciones del proceso
 | ¿El asegurado acepta la oferta? | Sí | No | Sí | No | — |
 | **Acciones / resultados** | | | | | |
 | Liquidar sin autorización gerencial | x | x |  |  |  |
-| Solicitar autorización al gerente | No | No | Sí | Sí | Sí |
-| Comunicar la oferta al asegurado | Sí | Sí | Sí | Sí | No |
-| Realizar el pago por transferencia | Sí | No | Sí | No | No |
-| Cerrar el siniestro como pagado | Sí | No | Sí | No | No |
+| Solicitar autorización al gerente |  |  | x | x | x |
+| Comunicar la oferta al asegurado | x | x | x | x |  |
+| Realizar el pago por transferencia | x |  | x |  |  |
+| Cerrar el siniestro como pagado | x |  | x |  |  |
 
 ### Descripción de las reglas
 
